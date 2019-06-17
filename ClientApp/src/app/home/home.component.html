@@ -1,0 +1,66 @@
+<div style="height: 10vh">
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Name" [formControl]="targetName" #searchInput>
+          <mat-error *ngIf="targetName.hasError('required')">
+            Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+    </form>
+</div>
+<div style="margin-top: 30px;">
+      <div class="table-container">
+        <div class="loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+          <mat-spinner style="margin:0 auto;" *ngIf="isLoadingResults"></mat-spinner>
+          <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+              GitHub's API rate limit has been reached. It will be reset in one minute.
+          </div>
+        </div> 
+
+        <table mat-table #dataTable [dataSource]="results | async" class="mat-elevation-z8" style="width: 100%" matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+          <!-- Number Column -->
+          <ng-container matColumnDef="number">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let row">{{row.id}}</td>
+            </ng-container>
+      
+            <!-- Name Column -->
+            <ng-container matColumnDef="fullname">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let row">{{row.full_name}}</td>
+            </ng-container>
+
+
+            <!-- State Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let row">{{row.description}}</td>
+              </ng-container>
+      
+            <!-- Home Column -->
+            <ng-container matColumnDef="home">
+                <th mat-header-cell *matHeaderCellDef>Home</th>
+                <td mat-cell *matCellDef="let row">{{row.home}}</td>
+              </ng-container>
+      
+            <!-- Created Column -->
+            <ng-container matColumnDef="created">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Created
+              </th>
+              <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
+            </ng-container>
+
+            <!-- language Column -->
+            <ng-container matColumnDef="language">
+                <th mat-header-cell *matHeaderCellDef>Language</th>
+                <td mat-cell *matCellDef="let row">{{row.language}}</td>
+              </ng-container>
+      
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+    </div>
+</div>
